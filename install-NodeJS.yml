@@ -1,0 +1,42 @@
+---
+# Installing NodeJS from web to the VMware Virtual Machine - RHEL 7 OS
+- hosts: test
+  remote_user: test1user
+  become: yes
+  vars: 
+    download_url: "http://nodejs.org/dist/node-v0.6.9.tar.gz"
+    download_folder: /opt
+    NodeJS_archive: "{{download_folder}}/node-v0.6.9.tar.gz"
+    package_folder: node-v0.6.9
+
+  tasks:    
+  - name: Install "Development Tools" group package
+    yum:
+      name: "@Development Tools"
+      state: present
+
+  - name: Install "NodeJS" from the source
+    command: "wget -P {{download_folder}} {{download_url}}"
+   
+  - name: Untar downloaded NodeJS package
+    command: "tar zxf {{NodeJS_archive}} -C {{download_folder}}"
+
+  - name: Install "openssl-devel" package
+    yum: 
+      name: openssl-devel
+      state: present
+ 
+  - name: Change Directory to /opt/node-v0.6.9 before executing the command
+    shell: ./configure
+    args:
+      chdir: "{{download_folder}}/{{package_folder}}"
+
+  - name: Executing make command
+    shell: make
+    args:
+      chdir: "{{download_folder}}/{{package_folder}}"
+
+  - name: Executing make install command
+    shell: make install
+    args:
+      chdir: "{{download_folder}}/{{package_folder}}"
