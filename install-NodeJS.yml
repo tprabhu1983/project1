@@ -1,6 +1,6 @@
 ---
 # Installing NodeJS from web to the VMware Virtual Machine - RHEL 7 OS
-- hosts: test
+- hosts: all
   remote_user: test1user
   become: yes
   vars: 
